@@ -1,7 +1,7 @@
 export const config = {
     dev: {
         base:
-            'http://localhost:8080/api/',
+            'http://trackit-backend.herokuapp.com/api/',
         version: 'v1',
     },
 };
