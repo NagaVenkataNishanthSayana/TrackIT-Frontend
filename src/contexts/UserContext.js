@@ -1,12 +1,12 @@
 import { createContext, useState } from "react";
 
-//Context Variables
+// Create User Context
 export const UserContext = new createContext({
     user: {},
     setUser: () => null,
 });
 
-//Provider Function to Let Children Use Context Variables
+// Provider function which will let children use Context Variables
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState({})
     const value = { user, setUser }

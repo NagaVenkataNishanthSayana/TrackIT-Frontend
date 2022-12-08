@@ -10,7 +10,7 @@ import { Chart as ChartJs, Tooltip, Title, ArcElement, Legend } from 'chart.js';
 import TaskDetailModal from "../TaskDetailModal";
 import { getAllUsersByProjectId, getAllTasksByProjectId, getAllUserTasksByProjectId } from '../services/projectAPI.js'
 import TaskCard from "../TaskCard";
-
+import '../ProjectDetail/ProjectDetail.scss'
 ChartJs.register(
     Tooltip, Title, ArcElement, Legend
 );
@@ -19,8 +19,8 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 650,
-    height: 550,
+    width: 380,
+    height: 400,
     bgcolor: 'background.paper',
     borderRadius: '0.5rem',
     boxShadow: 24,
@@ -100,6 +100,7 @@ const ProjectDetail = () => {
     }
 
     if (tasks && tasks.length > 0) {
+        // Calculate the count of tasks by each status category (IN_PROGRESS, DONE, CREATED)
         doneTaskCount = tasks.filter((obj) => obj.taskStatus[0] === DONE).length
         inProgressTaskCount = tasks.filter((obj) => obj.taskStatus[0] === IN_PROGRESS).length
         createdTaskCount = tasks.length - (inProgressTaskCount + doneTaskCount)
@@ -112,7 +113,9 @@ const ProjectDetail = () => {
                 'green',
                 'orange',
                 'blue'
-            ]
+            ],
+            borderColor: 'black',
+            borderwidth:'100px',
         },
         ],
         // These labels appear in the legend and in the tooltips when hovering different arcs
@@ -139,29 +142,22 @@ const ProjectDetail = () => {
             }
         },
         delay: 0,
-        onClick: function (click, elements, chart) {
-            var value = pieChartData.datasets[0].data[elements[0].index];
-            setPercentage(Math.round(((value / tasks.length) * 100) * 100) / 100);
+        onHover: function (click, elements, chart) {
+            var value = pieChartData.datasets[0].data[elements[0]?.index];
+            if(value){
+                setPercentage(Math.round(((value / tasks.length) * 100) * 100) / 100);
+                var divShow = document.getElementsByClassName('percentage-text');
+                divShow[0].style.display = 'block';
+        } else {
+            var divHide = document.getElementsByClassName('percentage-text');
+                divHide[0].style.display = 'none';
         }
-        // title: {
-        //   display: true, text: "Número de registros", fontColor: "white"
-        // },
-        // legend: {
-        //   position: "right", align: "start", labels: { fontColor: "white" }
-        // },
-        // layout: {
-        //   padding: 15
-        // },
-        // plugins: {
-        //   labels: { render: "percentage", fontColor: "white" }
-        // }
-
-    };
-
+    }
+}
     return (<>
 
         <div className="heading">
-            <Typography> <h2>Project Tasks </h2> </Typography>
+            <Typography> <h1>Project Tasks </h1> </Typography>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'row', marginLeft: '30rem', marginBottom: '2rem' }}>
@@ -180,7 +176,7 @@ const ProjectDetail = () => {
                     <MenuItem value="">
                         <em>None</em>
                     </MenuItem>
-                    {users.map((options) => <MenuItem key={options.id} value={options.userName}>{options.userName}</MenuItem>)}
+                    {users?.map((options) => <MenuItem key={options.id} value={options.userName}>{options.userName}</MenuItem>)}
                 </Select>
             </FormControl>
             <Button
@@ -209,7 +205,7 @@ const ProjectDetail = () => {
         }
         <Grid className="task-grid" container spacing={1}>
             {
-                tasks.map((task) => {
+                tasks?.map((task) => {
                     let user = getTaskUser(task.taskAssignedTo);
                     return <Grid item spacing={1}>
                         <TaskCard key={task.id} id={task.id} projectId={task.projectId} taskName={task.taskName} description={task.description} taskStatus={task.taskStatus} dueDate={task.dueDate} taskLabel={task.taskLabel} taskCreatedBy={task.taskCreatedBy} taskAssignedTo={task.taskAssignedTo} userName={user[0]?.userName} projectStartDate={state?.project?.startDate} projectEndDate={state?.project?.endDate} />
@@ -227,31 +223,15 @@ const ProjectDetail = () => {
             <Box sx={style}>
                 <div style={{ display: 'inline' }}>
                     <h2 style={{ textAlign: 'center' }}>ANALYTICS </h2>
-                    <FormControl
-                        variant="standard"
-                        style={{ float: 'right' }}
-                    >
-                        <InputLabel id="select-user">Select User</InputLabel>
-                        <Select
-                            IconComponent={() => <FilterAltIcon sx={{ fontSize: 30 }} />}
-                            id="select-user"
-                            sx={{ minWidth: 140, marginRight: 2 }}
-                            name="filteredUser"
-                            onChange={handleUserFilterChange}
-                            labelId="select-user"
-                        >
-                            <MenuItem value="">
-                                <em>None</em>
-                            </MenuItem>
-                            {users.map((options) => <MenuItem key={options.id} value={options.userName}>{options.userName}</MenuItem>)}
-                        </Select>
-                    </FormControl>
                 </div>
-                <div className="analytics" style={{ width: '80%', height: '80%', marginLeft: 91 }}>
-                    <Doughnut data={pieChartData} options={config} >
-                    </Doughnut>
-                    {percentage && <h2>{`${percentage}%`}</h2>}
-                </div>
+
+                {/* Section to display Doughnut chart */}
+                <div className="analytics" style={{ width: '79%', height: '75%', marginLeft: '12%', marginTop:'6%'}}>
+            <Doughnut  data={pieChartData} options={config} >
+            </Doughnut>
+            {percentage && <h2 className= "percentage-text">{`${percentage}%`}</h2>}
+            
+        </div>
             </Box>
         </Modal>
     </>)

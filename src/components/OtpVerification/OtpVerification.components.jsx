@@ -19,7 +19,7 @@ export default function OtpVerificationCard() {
     let { state } = useLocation();
 
     console.log(state);
-    const [email, setEmail] = useState(state.email);
+    const [email,] = useState(state.email);
     const [OTP, setOTP] = useState("");
     const [otpSecret, setOtpSecret] = useState(state.otpSecret);
     const [otpMisMatchError, setOtpMisMatchError] = useState(null);
@@ -142,7 +142,7 @@ export default function OtpVerificationCard() {
                                 <h1 className="otpVerification-heading">OTP Verification</h1>
                                 <div className="otpField">
                                     <TextField style={otpFieldStyle}
-                                               color="secondary"
+                                        color="secondary"
                                         id="outlined-password-input"
                                         type="text"
                                         placeholder="Enter OTP"
@@ -157,7 +157,7 @@ export default function OtpVerificationCard() {
                                     {seconds > 0 || minutes > 0 ? (
                                         <p className="counter">
                                             Time Remaining: <span className="time">{minutes < 10 ? `0${minutes}` : minutes}:
-                                            {seconds < 10 ? `0${seconds}` : seconds}</span>
+                                                {seconds < 10 ? `0${seconds}` : seconds}</span>
                                         </p>
                                     ) : (
                                         <p className="otp-NotRecieved-text">Didn't recieve code? <Link className="resend-otp" style={resendOTPStyle} onClick={handleResendOTP}>Resend OTP</Link></p>

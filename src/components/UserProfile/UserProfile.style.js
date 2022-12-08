@@ -1,6 +1,6 @@
 //Edit Button Styling
 export const editButtonStyle = {
-    backgroundColor: 'orange',
+    backgroundColor: 'royalblue',
 }
 
 //Cancel Button Styling

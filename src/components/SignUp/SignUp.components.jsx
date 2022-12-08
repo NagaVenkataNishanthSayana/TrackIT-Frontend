@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, Button, TextField,Tooltip,Zoom } from '@mui/material';
+import { Card, Button, TextField, Tooltip, Zoom } from '@mui/material';
 import logo from '../../assets/images/Project Management-2.jpg';
 import { registerUser } from "../services/userAPI";
 import { signUpField } from "./SignUp.styles";
@@ -21,8 +21,8 @@ export default function SignUpCard() {
     const [isValidPassword, setIsValidPassword] = useState(true);
     const [isMatchConfirmPassword, setIsMatchConfirmPassword] = useState(true);
     const [emailError, setEmailError] = useState(null);
-    const[isToolTipOpen,setIsToolTipOpen]=useState(false);
-    const passwordRequirementText="Password should contain a minimum of 8 Characters, an Uppercase letter, a Lowercase Letter, a Special Characater, and a number.";
+    const [isToolTipOpen, setIsToolTipOpen] = useState(false);
+    const passwordRequirementText = "Password requires atleast one number, Uppercase, Lowercase, special Character with a min of 8 characters";
     const navigate = useNavigate();
 
     //Function to Handle SignUp onSubmit
@@ -158,17 +158,17 @@ export default function SignUpCard() {
                             {<h5 style={emailValidateStyle}>{emailError}</h5>}
                         </div>
                         <div className="formElements">
-                            <Tooltip TransitionComponent={Zoom} open={isToolTipOpen} title={passwordRequirementText}  TransitionProps={{ timeout: 500 }}  arrow>
-                            <TextField style={signUpField} onMouseEnter={()=> setIsToolTipOpen(true)} onMouseLeave={()=> setIsToolTipOpen(false)}
-                                id="outlined-password-input"
-                                label="Password"
-                                type="password"
-                                placeholder="Enter Your Password"
-                                value={password}
-                                onChange={handlePasswordOnChange}
-                                required
-                                error={!isValidPassword}
-                            />
+                            <Tooltip TransitionComponent={Zoom} open={isToolTipOpen} title={passwordRequirementText} TransitionProps={{ timeout: 500 }} arrow>
+                                <TextField style={signUpField} onMouseEnter={() => setIsToolTipOpen(true)} onMouseLeave={() => setIsToolTipOpen(false)}
+                                    id="outlined-password-input"
+                                    label="Password"
+                                    type="password"
+                                    placeholder="Enter Your Password"
+                                    value={password}
+                                    onChange={handlePasswordOnChange}
+                                    required
+                                    error={!isValidPassword}
+                                />
                             </Tooltip>
                         </div>
                         <div className="confirmPasswordField">
@@ -186,7 +186,7 @@ export default function SignUpCard() {
                         </div>
 
                         <div className="signup-button">
-                            <Button style={sigUpButtonStyle} type="submit" variant="contained">SignUp</Button>
+                            <Button style={sigUpButtonStyle} type="submit" variant="contained">Sign Up</Button>
                         </div>
 
                         <div>

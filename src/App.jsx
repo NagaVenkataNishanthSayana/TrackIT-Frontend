@@ -15,6 +15,8 @@ import './App.scss';
 
 
 function App() {
+
+  // Fetch User Session details from Context.
   const { user } = useContext(UserContext);
   const token = user?.token
   const isLoggedIn = token && token.length !== 0 ? true : false;
@@ -49,7 +51,7 @@ function App() {
         <Route exact path="/verification"
           element={
             <OtpVerificationCard />} />
-        <Route component={<NoDataFound />} />
+        <Route path="*" element={<NoDataFound />} />
       </Routes>
     </>
 

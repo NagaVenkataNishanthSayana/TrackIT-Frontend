@@ -3,7 +3,7 @@ import { Card, CardHeader, CardContent, Button, Divider, Typography, Chip, Avata
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteModal from "../components/DeleteModal/DeleteModal";
-import { deepOrange, deepPurple, green, yellow, red } from '@mui/material/colors';
+import { deepOrange } from '@mui/material/colors';
 import ClockIcon from '@mui/icons-material/AccessTime';
 import DoneIcon from '@mui/icons-material/CheckCircle';
 import PendingIcon from '@mui/icons-material/Autorenew';
@@ -17,8 +17,9 @@ import './TaskCard.scss';
 
 const TaskCard = (props) => {
   const [open, setOpen] = useState(false);
-
   const [is_delete_open, setDeleteOpen] = useState(false);
+
+  // Handle Modal State open/close
   const handleOpen = () => {
     setOpen(true);
   };
@@ -32,12 +33,15 @@ const TaskCard = (props) => {
     setDeleteOpen(false)
   }
 
+
+  // Format Date 
   const formatShortDate = (date) => {
-    var newShortDate = new Date(date).toDateString();
-    return newShortDate.substring(newShortDate.indexOf(" ") + 1);
+    let newShortDate = new Date(date).toUTCString();
+    return newShortDate.split(" ").slice(1, 4).join(" ");
   }
 
   return (
+
     <Card className={'task-card ' + props.taskStatus} >
       <CardHeader sx={{
         display: "flex",
@@ -65,35 +69,38 @@ const TaskCard = (props) => {
           </Tooltip>
         }
         titleTypographyProps={{ variant: 'h5' }}
-        title={props.taskName} className="card-header" />
-      <div className="float-parent-element">
+        title={props.taskName} className="task-card-header" />
+
+      <div className="task-parent-element">
       </div>
       <Divider />
-      <CardContent className="float-parent-element">
-        <div className="card-description">
+
+      <CardContent className="task-parent-element">
+        <div className="task-card-description" >
           <div className="task-chips">
             {props?.taskLabel[0] === "BUG" && (
-              <Chip size="small" sx={{ marginRight: 1 }} icon={<BugIcon />} label={Constants.BUG} onClick={(e) => { console.log("clicked") }} color="error" />
+              <Chip size="small" sx={{ marginRight: 1, fontSize: '12px' }} icon={<BugIcon />} label={Constants.BUG} onClick={(e) => { console.log("clicked") }} color="error" />
             )}
 
             {props?.taskLabel[0] === "FEATURE" && (
-              <Chip size="small" sx={{ marginRight: 1 }} icon={<FeatureIcon />} label={Constants.FEATURE} onClick={(e) => { console.log("clicked") }} color="info" />
+              <Chip size="small" sx={{ marginRight: 1, fontSize: '12px' }} icon={<FeatureIcon />} label={Constants.FEATURE} onClick={(e) => { console.log("clicked") }} color="info" />
             )}
 
             {props?.taskStatus[0] === "CREATED" && (
-              <Chip size="small" sx={{ marginRight: 1 }} icon={<CreatedIcon />} label={Constants.CREATED} onClick={(e) => { console.log("clicked") }} color="info" />
+              <Chip size="small" sx={{ marginRight: 1, fontSize: '12px' }} icon={<CreatedIcon />} label={Constants.CREATED} onClick={(e) => { console.log("clicked") }} color="info" />
             )}
             {props?.taskStatus[0] === "IN_PROGRESS" && (
-              <Chip size="small" sx={{ marginRight: 1 }} icon={<PendingIcon />} label={Constants.IN_PROGRESS} onClick={(e) => { console.log("clicked") }} color="warning" />
+              <Chip size="small" sx={{ marginRight: 1, fontSize: '12px' }} icon={<PendingIcon />} label={Constants.IN_PROGRESS} onClick={(e) => { console.log("clicked") }} color="warning" />
             )}
             {props?.taskStatus[0] === "DONE" && (
-              <Chip size="small" sx={{ marginRight: 1 }} icon={<DoneIcon />} label={Constants.DONE} onClick={(e) => { console.log("clicked") }} color="success" />
+              <Chip size="small" sx={{ marginRight: 1, fontSize: '12px' }} icon={<DoneIcon />} label={Constants.DONE} onClick={(e) => { console.log("clicked") }} color="success" />
             )}
-            {props?.taskStatus[0] !== "DONE" && <Chip size="small" sx={{ marginRight: 1 }} icon={<ClockIcon />} label={formatShortDate(props.dueDate)} onClick={(e) => { console.log("clicked") }} color="success" />
+            {props?.taskStatus[0] !== "DONE" && <Chip size="small" sx={{ marginRight: 1, fontSize: '12px' }} icon={<ClockIcon />} label={formatShortDate(props.dueDate)} onClick={(e) => { console.log("clicked") }} color="success" />
             }
-            {props?.taskStatus[0] === "DONE" && <Chip size="small" sx={{ marginRight: 1 }} icon={<SubmittedIcon />} label={formatShortDate(props.dueDate)} onClick={(e) => { console.log("clicked") }} color="success" />
+            {props?.taskStatus[0] === "DONE" && <Chip size="small" sx={{ marginRight: 1, fontSize: '12px' }} icon={<SubmittedIcon />} label={formatShortDate(props.dueDate)} onClick={(e) => { console.log("clicked") }} color="success" />
             }
           </div>
+
           <Typography className="card-text-description"><b>Description: </b>{props.description}</Typography>
           {
             open ? (

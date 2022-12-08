@@ -9,6 +9,7 @@ import './index.scss';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <BrowserRouter>
+    {/* Allows data to be accessed through multiple levels of child components. */}
         <UserProvider>
             <App />
         </UserProvider>

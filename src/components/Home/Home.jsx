@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { Button, Typography } from "@mui/material";
+import { Button } from "@mui/material";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import ProjectDetailModal from "../ProjectDetailModal/ProjectDetailModal";
 import ProjectCard from "../ProjectCard/ProjectCard";
@@ -13,9 +13,13 @@ const Home = () => {
     const [open, setOpen] = useState(false);
     let [projectList, setProjectList] = useState([]);
     const [count, setCount] = useState(0);
+
+    // User context
     let { user, } = useContext(UserContext);
-    let userProjectsList = projectList?.filter(project => project?.users?.includes(user.id) )
-    
+
+    // All projects user is part of.
+    let userProjectsList = projectList?.filter(project => project?.users?.includes(user.id))
+
     useEffect(() => {
         getAllProjects()
             .then(projects => {
@@ -30,13 +34,18 @@ const Home = () => {
     };
     return (<>
 
-        <div className="heading"> <Typography> <h1>{PROJECTS}</h1> </Typography> </div>
-        <div className="projects" style={{ display: 'flex', flexDirection: 'row-reverse', marginRight: '68px', marginBottom: '15px' }}>
+        <div className="heading">
+            <h1>{PROJECTS}
+            </h1>
+        </div>
+
+        <div className="projects" style={{ display: 'flex', flexDirection: 'row-reverse', marginLeft: '30px', marginBottom: '15px' }}>
             <Button
                 color="primary"
                 variant="contained"
                 endIcon={<AddOutlinedIcon fontSize="small" />}
                 onClick={handleModalOpen}
+                sx={{ marginRight: '48px' }}
             >{CREATE_PROJECT}</Button>
         </div>
         {
@@ -45,7 +54,7 @@ const Home = () => {
             ) : null
         }
         {
-            userProjectsList.map((project) => {
+            userProjectsList?.map((project) => {
                 return <ProjectCard key={project.id} id={project.id} title={project.title} description={project.description} project={project} />
             })
         }

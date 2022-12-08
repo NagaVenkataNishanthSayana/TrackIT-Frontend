@@ -5,25 +5,30 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import ArrowRightAltOutlinedIcon from '@mui/icons-material/ArrowRightAltOutlined';
-import { deepOrange, deepPurple, green, yellow, red } from '@mui/material/colors';
+import { deepOrange, deepPurple, green, cyan, red } from '@mui/material/colors';
 import ProjectDetailModal from "../ProjectDetailModal/ProjectDetailModal";
 import { getAllUsersByProjectId } from "../services/projectAPI";
 import DeleteModal from "../DeleteModal/DeleteModal";
 import { UserContext } from "../../contexts/UserContext";
-import PositionedSnackbar from "../PositionedSnackBar/PositionedSnackbar";
 import './ProjectCard.scss'
 
 const ProjectCard = (props) => {
+
   let navigate = useNavigate()
   const [open, setOpen] = useState(false);
   const [is_delete_open, setDeleteOpen] = useState(false);
   const [users, setUsers] = useState([]);
   const [count, setCount] = useState(0);
   let projectId = props.id
+
+  // Fetch user from Context
   const { user } = useContext(UserContext)
+
+  // Check whether loggedin User is Project Admin
   let isProjectAdmin = props.project.adminUser === user.id
 
   useEffect(() => {
+    // API to fetch all project users.
     getAllUsersByProjectId(projectId).then(users => {
       setUsers(users)
       setCount(count + 1)
@@ -50,34 +55,37 @@ const ProjectCard = (props) => {
     console.info('You clicked the Chip.');
   };
 
+  // Format Date 
   const formatShortDate = (date) => {
-    var newShortDate = new Date(date).toDateString();
-    return newShortDate.substring(newShortDate.indexOf(" ") + 1);
+    let newShortDate = new Date(date).toUTCString();
+    return newShortDate.split(" ").slice(1, 4).join(" ");
   }
 
-  const backgroundColors = [deepOrange[500], green[500], yellow[500], deepPurple[500]]
+  const backgroundColors = [deepOrange[500], green[500], cyan[500], deepPurple[500], red[500]]
 
   const Avatars = () => users?.map((user, idx) => <Tooltip key={idx} title={user?.userName}>
     <Avatar sx={{ bgcolor: backgroundColors[idx], fontSize: "small" }}> {user?.userName[0]} </Avatar>
   </Tooltip>)
-  const UserIcons = () => {
+
+  const ProjectTitle = () => {
     return <div>
       {props.title}
     </div>
   };
+
   return (
     <Card className="card">
       <div className="float-parent-element">
-        <CardHeader title={<UserIcons />}
+        <CardHeader title={<ProjectTitle />}
           avatar={
             <AvatarGroup> {<Avatars />} </AvatarGroup>
           }
           action={
             <>
-              <Button size="small" color="error" variant="text" disabled={!isProjectAdmin} onClick={(e) => handleDeleteOpen()}>
+              <Button sx={{ paddingLeft: "0px" }} size="small" color="error" variant="text" disabled={!isProjectAdmin} onClick={(e) => handleDeleteOpen()}>
                 <DeleteIcon />
               </Button>
-              <Button size="small" color="primary" variant="text" disabled={!isProjectAdmin} onClick={(e) => handleOpen()}>
+              <Button sx={{ paddingRight: "0px" }} size="small" color="primary" variant="text" disabled={!isProjectAdmin} onClick={(e) => handleOpen()}>
                 <EditIcon />
               </Button>
             </>
@@ -85,6 +93,7 @@ const ProjectCard = (props) => {
           } className="project-card-header" titleTypographyProps={{ variant: 'h5', noWrap: true }}
           sx={{
             display: "flex",
+            backgroundColor: "lightblue",
             overflow: "hidden",
             "& .MuiCardHeader-content": {
               overflow: "hidden"
@@ -112,9 +121,10 @@ const ProjectCard = (props) => {
 
       </CardContent>
       <div className="footer">
-        <Chip sx={{ marginRight: 1 }} label={"Start Date: " + formatShortDate(props.project.startDate)} onClick={handleClick} color="primary" />
-        <ArrowRightAltOutlinedIcon sx={{ color: "orange" }} />
+        <Chip label={"Start Date: " + formatShortDate(props.project.startDate)} onClick={handleClick} color="primary" />
+        <ArrowRightAltOutlinedIcon sx={{ color: "orange", marginTop: "3px", marginRight: "2px" }} />
         <Chip label={"End Date: " + formatShortDate(props.project.endDate)} onClick={handleClick} color="success" />
+        {/* Navigate to Project Detailed View */}
         <div className="detail-view-button">
           <Button size="small" color="primary" variant="text" onClick={(e) => navigate(`/project-detail/${props.id}`, { state: props })}>
             Detail View

@@ -53,7 +53,7 @@ export const deleteProjectById = async (projectId, isProjectAdmin) => {
 
     try {
         const res = await axios({
-            url: `${BASE_URL}/projects/${projectId}?isProjectAdmin={isProjectAdmin}`,
+            url: `${BASE_URL}/projects/${projectId}?isProjectAdmin=${isProjectAdmin}`,
             method: 'DELETE',
             header: headers,
         })

@@ -1,54 +1,35 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import Snackbar from '@mui/material/Snackbar';
+import { Snackbar } from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
 
-export default function PositionedSnackbar() {
-  const [state, setState] = React.useState({
-    open: false,
-    vertical: 'top',
-    horizontal: 'center',
-  });
-  const { vertical, horizontal, open } = state;
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
-  const handleClick = (newState) => () => {
-    setState({ open: true, ...newState });
+export default function PositionedSnackbar(props) {
+  const {open, vertical, horizontal, message, severity, setOpen } = props;
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(!open);
   };
-
-  const handleClose = () => {
-    setState({ ...state, open: false });
-  };
-
-  const buttons = (
-    <React.Fragment>
-      <Button
-        onClick={handleClick({
-          vertical: 'top',
-          horizontal: 'center',
-        })}
-      >
-        Top-Center
-      </Button>
-      <Button
-        onClick={handleClick({
-          vertical: 'top',
-          horizontal: 'right',
-        })}
-      >
-        Top-Right
-      </Button>
-    </React.Fragment>
-  );
 
   return (
-    <div>
-      {buttons}
-      <Snackbar
-        anchorOrigin={{ vertical, horizontal }}
-        open={open}
-        onClose={handleClose}
-        message="snackbar alert message"
-        key={vertical + horizontal}
-      />
-    </div>
+    <>
+    <Snackbar 
+      open={open} 
+      autoHideDuration={6000} 
+      onClose={handleClose}
+      anchorOrigin={{ vertical, horizontal }}
+      // message={message}
+      key={vertical + horizontal}
+      >
+        <Alert onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
+          {message}
+        </Alert>
+      </Snackbar>
+    </>
   );
 }

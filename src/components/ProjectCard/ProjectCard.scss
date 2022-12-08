@@ -1,5 +1,5 @@
 .card {
-    margin-left: 10rem;
+    margin-left: 7rem;
     width: 80rem;
     margin-bottom: 1.2rem;
     // max-height: 14rem;
@@ -7,7 +7,7 @@
     height: 14rem !important;
     border: none;
     border: 1px groove black;
-    border-left: 4px solid green;
+    border-left: 4px solid rgb(30, 167, 30);
 
 }
 
@@ -33,10 +33,11 @@
 
 .detail-view-button {
     margin-left: 48rem !important;
-    // padding-bottom: 1.5rem !important;
+    margin-top: -9px;
 }
 
 .card-description {
-    width: 40rem;
-    // padding-bottom: 2rem;
+    width: 78.5rem !important;
+    height: 4.3rem;
+    overflow-y: auto;
 }

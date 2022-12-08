@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { useContext, useEffect, useState } from "react";
-import {Card, Button, TextField,Tooltip,Zoom} from '@mui/material';
+import { Card, Button, TextField, Tooltip, Zoom } from '@mui/material';
 import { UserContext } from "../../contexts/UserContext";
 import { updateUserDetails } from "../services/userAPI";
 import { editButtonStyle, cancelButtonStyle, saveButtonStyle } from './UserProfile.style';
 import './UserProfile.styles.scss';
+import logo from "../../assets/images/user.jpg";
 
 //User Profile Component
 const UserProfile = () => {
@@ -18,8 +19,8 @@ const UserProfile = () => {
     const [isValidPassword, setIsValidPassword] = useState(true);
     const [tempUserName, setTempUserName] = useState("");
     const [tempPassword, setTempPassword] = useState("");
-    const[isToolTipOpen,setIsToolTipOpen]=useState(false);
-    const passwordRequirementText="Password should contain a minimum of 8 Characters, an Uppercase letter, a Lowercase Letter, a Special Characater, and a number.";
+    const [isToolTipOpen, setIsToolTipOpen] = useState(false);
+    const passwordRequirementText = "Password requires atleast one number, Uppercase, Lowercase, special Character with a min of 8 characters";
 
     //Function to Handle Edit button onClick
     const handleEdit = (e) => {
@@ -64,11 +65,11 @@ const UserProfile = () => {
 
             }).catch(err => {
                 //Handling error from API Call
-            if (err.response.status === 400 || err.response.status===500) {
-                console.log("Something Wrong with Server");
-            }
-            console.log(err.response.data);
-        });
+                if (err.response.status === 400 || err.response.status === 500) {
+                    console.log("Something Wrong with Server");
+                }
+                console.log(err.response.data);
+            });
 
         setIsEditButtonDisabled(!isEditButtonDisabled);
         setIsEditDisabled(!isEditDisabled);
@@ -116,66 +117,71 @@ const UserProfile = () => {
     }, []);
 
     return (
-        <div className="userProfile-container">
-            <Card sx={{ boxShadow: 3, borderRadius: 3 }} className="userProfile-card">
-                <h1 className="userprofile-heading">User Profile</h1>
-                <div className="userForm">
-                    {
-                        <form className="userProfileForm" onSubmit={handleUpdateUserDetails}>
-                            <div className="profileFormElements">
-                                <div className="name-textField"><h3 className="name">Name:</h3></div>
-                                <div className="nameField">
-                                    <TextField disabled={isEditDisabled}
-                                        id="outlined-password-input"
-                                        type="text"
-                                        placeholder="Name"
-                                        value={userName}
-                                        onChange={handleUserNameOnChange}
-                                        required
-                                        error={!isValidUsername}
-                                    />
-                                </div>
-                            </div>
-                            <div className="profileFormElements">
-                                <div className="textField"><h3 className="password">Password:</h3></div>
-                                <div className="passwordField">
-                                    <Tooltip TransitionComponent={Zoom} open={isToolTipOpen} title={passwordRequirementText}  TransitionProps={{ timeout: 500 }} placement="right"  arrow>
-                                    <TextField disabled={isEditDisabled} onMouseEnter={()=> setIsToolTipOpen(true)} onMouseLeave={()=> setIsToolTipOpen(false)}
-                                        id="outlined-password-input"
-                                        type="password"
-                                        placeholder="Password"
-                                        value={password}
-                                        onChange={handlePasswordOnChange}
-                                        required
-                                        error={!isValidPassword}
-                                    />
-                                    </Tooltip>
-                                </div>
-                            </div>
-
-                            {!isEditButtonDisabled ? (
-                                <div className="edit-button">
-                                    <Button style={editButtonStyle } type="submit" variant="contained" onClick={handleEdit}>Edit</Button>
-                                </div>
-                            ) : (
-                                <>
-                                    <div className="options-container">
-                                        <div className="save-button">
-                                            <Button style={saveButtonStyle } type="submit" variant="contained"  >save</Button>
-                                        </div>
-                                        <div className="cancel-button">
-                                            <Button style={cancelButtonStyle } type="submit" variant="contained" onClick={handleCancelEdit}>cancel</Button>
-                                        </div>
+        <div>
+            <div className="user-profile-Image-container">
+                <img className="user-profile-Image" src={logo} alt="User Profile" />
+            </div>
+            <div className="userProfile-container">
+                <Card sx={{ boxShadow: 3, borderRadius: 3 }} className="userProfile-card">
+                    <h1 className="userprofile-heading">User Profile</h1>
+                    <div className="userForm">
+                        {
+                            <form className="userProfileForm" onSubmit={handleUpdateUserDetails}>
+                                <div className="profileFormElements">
+                                    <div className="name-textField"><h3 className="name">Username</h3></div>
+                                    <div className="nameField">
+                                        <TextField disabled={isEditDisabled}
+                                            id="outlined-password-input"
+                                            type="text"
+                                            placeholder="Name"
+                                            value={userName}
+                                            onChange={handleUserNameOnChange}
+                                            required
+                                            error={!isValidUsername}
+                                        />
                                     </div>
-                                </>
-                            )
-                            }
-                        </form>
-                    }
+                                </div>
+                                <div className="profileFormElements">
+                                    <div className="textField"><h3 className="password">Password</h3></div>
+                                    <div className="passwordField">
+                                        <Tooltip TransitionComponent={Zoom} open={isToolTipOpen} title={passwordRequirementText} TransitionProps={{ timeout: 500 }} placement="right" arrow>
+                                            <TextField disabled={isEditDisabled} onMouseEnter={() => setIsToolTipOpen(true)} onMouseLeave={() => setIsToolTipOpen(false)}
+                                                id="outlined-password-input"
+                                                type="password"
+                                                placeholder="Password"
+                                                value={password}
+                                                onChange={handlePasswordOnChange}
+                                                required
+                                                error={!isValidPassword}
+                                            />
+                                        </Tooltip>
+                                    </div>
+                                </div>
 
-                </div>
+                                {!isEditButtonDisabled ? (
+                                    <div className="edit-button">
+                                        <Button style={editButtonStyle} type="submit" variant="contained" onClick={handleEdit}>Edit</Button>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <div className="options-container">
+                                            <div className="save-button">
+                                                <Button style={saveButtonStyle} type="submit" variant="contained">save</Button>
+                                            </div>
+                                            <div className="cancel-button">
+                                                <Button style={cancelButtonStyle} type="submit" variant="contained" onClick={handleCancelEdit}>cancel</Button>
+                                            </div>
+                                        </div>
+                                    </>
+                                )
+                                }
+                            </form>
+                        }
 
-            </Card>
+                    </div>
+
+                </Card>
+            </div>
         </div>
     );
 }

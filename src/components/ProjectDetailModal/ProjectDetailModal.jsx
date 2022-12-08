@@ -23,14 +23,19 @@ const style = {
 };
 
 export default function ProjectDetailModal({ props, open, handleClose }) {
+
+    // Format Date to validate Date Inputs
     const currDate = new Date().toLocaleDateString();
     const formattedDate = moment(currDate).format("YYYY-MM-DD")
+
     let { id, title, description, project } = props ? props : { id: '', title: '', description: '', project: {} };
+
     const [users, setUsers] = useState([]);
     const { user } = useContext(UserContext)
     let initialUsers = users.filter(u => (project.users?.includes(u.id)))
     let projectAdmin = props ? project.adminUser : user.id
     let isProjectAdmin = user.id === projectAdmin
+    
     const defaultInitialValues = props ? initialUsers : [{ id: user?.id, userName: user.userName, email: user?.email }]
     const [projectUsers, setProjectUsers] = useState([]);
     const [modalHeading, setModalHeading] = useState("");

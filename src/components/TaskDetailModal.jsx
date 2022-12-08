@@ -24,20 +24,23 @@ export default function TaskDetailModal(propObject) {
     let { props, open, handleClose, pid, projectStartDate, projectEndDate } = propObject;
 
     let { id, projectId, taskName, description, taskStatus, dueDate, taskLabel, taskCreatedBy, taskAssignedTo, userName } = props ? props : { id: '', projectId: pid, taskName: '', description: '', taskStatus: ['Created'], dueDate: '', taskLabel: ['FEATURE'], taskCreatedBy: '', taskAssignedTo: '', userName: '' };
+
     const { user } = useContext(UserContext)
     const [project_users, setProjectUsers] = useState([]);
     const [modalHeading, setModalHeading] = useState("");
 
+    // To validate Date Inputs
     let formattedStartDate = moment(projectStartDate).add(1, 'days').format("YYYY-MM-DD")
     let formattedEndDate = moment(projectEndDate).add(1, 'days').format("YYYY-MM-DD")
     const [validDate,] = useState({ formattedStartDate, formattedEndDate })
 
     const projId = props ? props.projectId : pid;
+
     let initialValues = {
         "taskName": "",
         "projectId": projId,
         "description": "",
-        "dueDate": "",
+        "dueDate": formattedStartDate,
         "taskStatus": [
             "CREATED"
         ],
@@ -63,9 +66,11 @@ export default function TaskDetailModal(propObject) {
     const assignee = props ? props.userName : "";
     const status = props ? statusOptions.filter((statusObject) => statusObject.label === props?.taskStatus[0])[0]["value"] : ['Created'];
     const label = props ? featureOptions.filter((labelObj) => labelObj.label === props?.taskLabel[0])[0]["value"] : ['FEATURE'];
+
     var [task_user, setUser] = useState(assignee);
     var [task_status, setTaskStatus] = useState(status);
     var [task_label, setTaskLabel] = useState(label);
+
     let initialPropValues = {
         taskName: taskName,
         projectId: projectId,
@@ -83,6 +88,7 @@ export default function TaskDetailModal(propObject) {
     const [formValues, setFormValues] = useState(initialFormValues);
 
     useEffect(() => {
+        // Fetch users in the given project
         getAllUsersByProjectId(projId).then(users => {
             setProjectUsers(users)
         }).catch(err => {
@@ -137,6 +143,8 @@ export default function TaskDetailModal(propObject) {
     const onKeyDown = (e) => {
         e.preventDefault();
     };
+
+    // On form Submmission
     const handleSubmit = (event) => {
         event.preventDefault();
         if (props) {
@@ -149,6 +157,7 @@ export default function TaskDetailModal(propObject) {
                 .then((res) => console.log("create successful"))
                 .catch((err) => console.log(err))
         }
+        // Close Modal after API call 
         handleClose()
     };
 
@@ -196,23 +205,25 @@ export default function TaskDetailModal(propObject) {
                             multiline
                             rows={4}
                         />
-                        <TextField
-                            id="date"
-                            label="Due Date"
-                            type="date"
-                            defaultValue={formValues.dueDate}
-                            sx={{ width: 220, marginBottom: 2, marginRight: 100 }}
-                            size="small"
-                            name="dueDate"
-                            inputProps={{ min: validDate.formattedStartDate, max: validDate.formattedEndDate }}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            onKeyDown={onKeyDown}
-                            onChange={handleInputChange}
-                            required
-                        />
+                        <div className = "date-field">
+                            <TextField
+                                id="date"
+                                label="Due Date"
+                                type="date"
+                                defaultValue={formValues.dueDate}
+                                sx={{ width: 220, marginBottom: 2, marginRight: 100 }}
+                                size="small"
+                                name="dueDate"
+                                inputProps={{ min: validDate.formattedStartDate, max: validDate.formattedEndDate }}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                onKeyDown={onKeyDown}
+                                onChange={handleInputChange}
+                                required
+                            />
 
+                        </div>
                         <FormControl
                             variant="outlined"
                             margin={"0.5"}
@@ -238,6 +249,27 @@ export default function TaskDetailModal(propObject) {
                             margin={"0.5"}
                             style={{ width: "50%" }}
                         >
+                            <InputLabel id="select-user">Assignee</InputLabel>
+                            <Select
+                                sx={{ width: 220, marginTop: 0.34, height: 40 }}
+                                variant="outlined"
+                                defaultValue={formValues.taskAssignedTo}
+                                value={task_user}
+                                name="taskAssignedTo"
+                                onChange={handleUserChange}
+                                labelId="select-user"
+                                label={"Select User"}
+                                required
+                            >
+                                {project_users?.map((options) => <MenuItem key={options.id} value={options.userName}>{options.userName}</MenuItem>)}
+                            </Select>
+                        </FormControl>
+
+                        <FormControl
+                            variant="outlined"
+                            margin={"0.5"}
+                            style={{ width: "50%" }}
+                        >
                             <InputLabel id="select-label">Task Label</InputLabel>
                             <Select
                                 sx={{ width: 220, marginTop: 0.1, height: 40, marginBottom: 2 }}
@@ -253,26 +285,6 @@ export default function TaskDetailModal(propObject) {
                             </Select>
                         </FormControl>
 
-                        <FormControl
-                            variant="outlined"
-                            margin={"0.5"}
-                            style={{ width: "50%" }}
-                        >
-                            <InputLabel id="select-user">Assignee</InputLabel>
-                            <Select
-                                sx={{ width: 220, marginTop: 0.34, height: 40 }}
-                                variant="outlined"
-                                defaultValue={formValues.taskAssignedTo}
-                                value={task_user}
-                                name="taskAssignedTo"
-                                onChange={handleUserChange}
-                                labelId="select-user"
-                                label={"Select User"}
-                                required
-                            >
-                                {project_users.map((options) => <MenuItem key={options.id} value={options.userName}>{options.userName}</MenuItem>)}
-                            </Select>
-                        </FormControl>
                         <div className='button-section'>
                             <Button sx={{ marginLeft: 2 }} onClick={handleClose} color="error" variant="outlined" endIcon={<ClearOutlinedIcon fontSize="small" />} > CANCEL </Button>
                             <Button variant="contained" type="submit" color="primary" endIcon={<ChevronRightOutlinedIcon fontSize="small" />}> SAVE </Button>

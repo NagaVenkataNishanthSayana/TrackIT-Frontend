@@ -6,6 +6,7 @@ export const config = {
     },
 };
 
+// Get the base URL for all API requests
 export const getBaseUrl = () => {
     const env = 'dev';
     const { base, version } = config[env];
